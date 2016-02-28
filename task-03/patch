@@ -1,0 +1,11 @@
+--- linux/Makefile.orig	2015-05-21 22:16:00.775229762 +0700
++++ linux/Makefile	2015-05-18 20:57:12.451707725 +0700
+@@ -1,7 +1,7 @@
+ VERSION = 4
+ PATCHLEVEL = 0
+ SUBLEVEL = 0
+-EXTRAVERSION =
++EXTRAVERSION = -eudyptula
+ NAME = Hurr durr I'ma sheep
+ 
+ # *DOCUMENTATION*
