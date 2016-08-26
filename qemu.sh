@@ -22,4 +22,6 @@ sudo $QEMU_EMULATOR \
 	# -usbdevice host:0951:1607 \ 
 
     #-usb \
-# access the qemu monitor using telent localhost 4444
+# access the qemu monitor using telnet localhost 4444
+# Copy modules into /lib/modules/<kernel-version>
+# run depmod -a

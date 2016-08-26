@@ -1,0 +1,11 @@
+buildroot/
+coreos/
+rootfs/
+*.ko
+*.cmd
+*.tmp_versions
+*.o
+*.symvers
+*.mod.c
+*.order
+*.txt
