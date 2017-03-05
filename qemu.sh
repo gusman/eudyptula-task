@@ -13,7 +13,7 @@ sudo $QEMU_EMULATOR \
     -boot c -m $RAMSZ \
     -localtime -no-reboot -net nic -net user \
     -enable-kvm \
-    -monitor tcp:localhost:4444,server,nowait \
+    -monitor tcp:127.0.0.1:4444,server,nowait \
     -append "root=/dev/sda rw console=ttyAMA0 console=ttyS0" \
     -serial stdio \
 	-nographic \
