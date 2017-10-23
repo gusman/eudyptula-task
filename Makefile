@@ -21,7 +21,7 @@ TASK_DIR = $(TOP_DIR)/task-06
 # ----------------------------------------------------------------------------
 # Target List
 # ----------------------------------------------------------------------------
-all: task-clean task-build rootfs-copy buildroot-build
+all: task-clean task-build rootfs-copy br-build
 
 task-build:
 	$(Q) $(ECHO) "------------------------------------------------------------"
@@ -39,15 +39,53 @@ rootfs-copy:
 	$(Q) $(ECHO) "------------------------------------------------------------"
 	$(Q) $(ECHO) " ROOTFS BUILD"
 	$(Q) $(ECHO) "------------------------------------------------------------"
-	$(CD) $(TASK_DIR) && $(MAKE)
 	$(RM) $(ROOTFS_DIR)/root/*
-	$(CP) $(TASK_DIR)/*.ko           $(ROOTFS_DIR)/root/	
+	$(CP) $(TASK_DIR)/*.ko  $(ROOTFS_DIR)/root/	
 
-buildroot-build:
+br-config:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " BUILDROOT CONFIG"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	sudo make -C $(BUILDROOT_DIR) O=$(BUILDROOT_BUILD) distclean
+	$(CP) $(BUILDROOT_DEFCONFIG) $(BUILDROOT_DIR)/configs
+	make -C $(BUILDROOT_DIR) O=$(BUILDROOT_BUILD) qemu_x86_64_debug_defconfig
+
+br-clean:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " BUILDROOT CLEAN"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	make -C $(BUILDROOT_DIR) O=$(BUILDROOT_BUILD) clean
+
+br-build:
 	$(Q) $(ECHO) "------------------------------------------------------------"
 	$(Q) $(ECHO) " BUILDROOT BUILD"
 	$(Q) $(ECHO) "------------------------------------------------------------"
-	$(CD) $(TASK_DIR) && $(MAKE)
-	make -C $(BUILDROOT_DIR)
+	make -C $(BUILDROOT_DIR) O=$(BUILDROOT_BUILD)
+
+kernel-config:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " KERNEL CONFIG"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) mrproper 
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) x86_64_defconfig
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) kvmconfig
+
+kernel-clean:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " KERNEL CLEAN"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) clean 
+
+kernel-build:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " KERNEL BUILD"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) -j2 bzImage
+
+kernel-modules:
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	$(Q) $(ECHO) " KERNEL MODULES"
+	$(Q) $(ECHO) "------------------------------------------------------------"
+	make -C $(KERNEL_DIR) O=$(KERNEL_BUILD) -j2 modules
 
 
